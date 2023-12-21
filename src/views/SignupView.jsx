@@ -1,8 +1,10 @@
 import "../App.css";
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 function LoginView() {
+
+  const navigate = useNavigate();
   return (
     <>
     <div className="center">
@@ -33,7 +35,7 @@ function LoginView() {
           />
         </div>
         <div className="form-group">
-          <button type="submit">Sign up</button>
+          <button type="submit" onClick={() => navigate('/login')}>Sign up</button>
         </div>
         <div className="alternate-action"><NavLink to={'/login'}>Already have an account? Login here</NavLink></div>
       </div>
