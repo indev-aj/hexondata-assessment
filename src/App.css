@@ -1,0 +1,104 @@
+/* styles.css */
+
+html{
+  margin:0;
+  padding:0;
+  max-height:100vh;
+  overflow:hidden;
+}
+
+:root {
+  --orange: #ffb200
+}
+
+body { 
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: var(--orange);
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  width: 300px;
+  margin: 20px auto;
+}
+
+.card h2 {
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+  outline: none;
+}
+
+.form-group button {
+  background-color: var(--orange);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.form-group button:hover {
+  background-color: #45a049;
+}
+
+.logout {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* MapContainer Leaflet */
+.leaflet-container {
+  height: 100%;
+}
+
+.map-wrapper {
+  padding: 25px;
+  height: 80vh;
+  width: 100vw;
+}
+
+.card-map {
+  height: 100%;
+  width: 100%;
+}
