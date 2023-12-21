@@ -7,33 +7,31 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 function MapLocator() {
-
   const [modal, setModal] = useState(false);
 
-  const toggleModal = () =>  {
-    setModal(!modal)
-  }
+  const toggleModal = () => {
+    setModal(!modal);
+  };
 
+  // center position Kuala Lumpur
   const centerPosition = [3.1498119894855927, 101.69660499707578];
   const zoom = 15;
   const scrollWheelZoom = true;
 
   return (
     <>
-      
       <header>
         <h1>Map Locator</h1>
-        <NavLink to={'/login'}>
-          Logout
-        </NavLink>
+        <NavLink to={"/login"} style={{color: "white"}}>Logout</NavLink>
       </header>
 
       <div className="map-wrapper">
-      
         <div className="card card-map">
           <div className="welcome">
             <div className="welcome-text">Welcome, Amrin</div>
-            <button className="button" onClick={toggleModal}>Add New</button>
+            <button className="button" onClick={toggleModal}>
+              Add New
+            </button>
           </div>
           <hr />
           <MapContainer
@@ -46,12 +44,9 @@ function MapLocator() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
           </MapContainer>
-          {modal && <Modal setModal={setModal}  />}
+          {modal && <Modal setModal={setModal} />}
         </div>
       </div>
-
-      
-      
     </>
   );
 }
