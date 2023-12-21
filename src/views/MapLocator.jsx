@@ -1,26 +1,37 @@
 import "leaflet/dist/leaflet.css";
 
 import { MapContainer, TileLayer } from "react-leaflet";
+import Modal from "../components/Modal";
+import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 function MapLocator() {
+
+  const [modal, setModal] = useState(false);
+
+  const toggleModal = () =>  {
+    setModal(!modal)
+  }
+
   const centerPosition = [3.1498119894855927, 101.69660499707578];
   const zoom = 15;
   const scrollWheelZoom = true;
 
   return (
     <>
+
       <header>
         <h1>Map Locator</h1>
-        <a href="#" className="logout">
+        <NavLink to={'/login'}>
           Logout
-        </a>
+        </NavLink>
       </header>
 
       <div className="map-wrapper">
         <div className="card card-map">
           <div className="welcome">
             <div className="welcome-text">Welcome, Amrin</div>
-            <button className="button">Add New</button>
+            <button className="button" onClick={toggleModal}>Add New</button>
           </div>
           <hr />
           <MapContainer
@@ -35,6 +46,8 @@ function MapLocator() {
           </MapContainer>
         </div>
       </div>
+
+      
     </>
   );
 }

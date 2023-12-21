@@ -45,7 +45,7 @@ header h1 {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
-  width: 300px;
+  width: 400px;
   margin: 20px auto;
 }
 
@@ -112,5 +112,16 @@ button:hover {
 .welcome-text {
   font-size: 24px;
   font-weight: bold;
+  text-align: start;
+}
+
+/* Modal */
+
+.card-modal {
+  width: 600px;
+}
+
+.card-modal .modal-title {
+  font-size: 24px;
   text-align: start;
 }

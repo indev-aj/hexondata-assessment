@@ -1,11 +1,13 @@
 import "../App.css";
 
+import { NavLink } from 'react-router-dom'
+
 function LoginView() {
   return (
     <>
     <div className="center">
       <div className="card">
-        <h2>Login</h2>
+        <h2>Sign up</h2>
         <div className="form-group">
           <input
             type="text"
@@ -31,9 +33,9 @@ function LoginView() {
           />
         </div>
         <div className="form-group">
-          <button type="submit">Login</button>
+          <button type="submit">Sign up</button>
         </div>
-        <div className="alternate-action">No account? Sign up here</div>
+        <div className="alternate-action"><NavLink to={'/login'}>Already have an account? Login here</NavLink></div>
       </div>
       </div>
     </>
