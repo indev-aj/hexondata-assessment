@@ -1,7 +1,8 @@
 import "leaflet/dist/leaflet.css";
 
-import { MapContainer, TileLayer } from "react-leaflet";
 import Modal from "../components/Modal";
+
+import { MapContainer, TileLayer } from "react-leaflet";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -19,7 +20,7 @@ function MapLocator() {
 
   return (
     <>
-
+      
       <header>
         <h1>Map Locator</h1>
         <NavLink to={'/login'}>
@@ -28,6 +29,7 @@ function MapLocator() {
       </header>
 
       <div className="map-wrapper">
+      
         <div className="card card-map">
           <div className="welcome">
             <div className="welcome-text">Welcome, Amrin</div>
@@ -44,9 +46,11 @@ function MapLocator() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
           </MapContainer>
+          {modal && <Modal setModal={setModal}  />}
         </div>
       </div>
 
+      
       
     </>
   );

@@ -117,6 +117,10 @@ button:hover {
 
 /* Modal */
 
+.modal {
+  /* z-index: 1; */
+}
+
 .card-modal {
   width: 600px;
 }

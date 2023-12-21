@@ -1,7 +1,7 @@
-function Modal() {
+function Modal({ setModal }) {
   return (
     <>
-      <div className="center">
+      <div className="center modal">
         <div className="card card-modal">
           <h2 className="modal-title">Add new location</h2>
           <hr />
@@ -38,7 +38,7 @@ function Modal() {
             />
           </div>
           <div className="form-group">
-            <button type="submit">Add to map</button>
+            <button type="submit" onClick={() => setModal(false)}>Add to map</button>
           </div>
         </div>
       </div>
