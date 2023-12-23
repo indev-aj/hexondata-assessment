@@ -23,7 +23,11 @@ function LoginView() {
       });
 
       const data = await response.json();
-      console.log(data);
+      if (data['success']) {
+        navigate('/');
+      } else {
+        console.log('no user found');
+      }
     } catch (error) {
       console.error('Error during registration:', error);
     }
