@@ -16,14 +16,6 @@ const connection = mysql.createPool({
   database: process.env.DATABASE,
 });
 
-// connection.connect((error) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Database connected!");
-//   }
-// });
-
 module.exports = {
   app,
   connection,

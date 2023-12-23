@@ -89,6 +89,43 @@ router.post("/api/register", async (req, res) => {
   });
 });
 
-// Add more routes as needed
+// Select markers from DB
+router.get("/api/get/markers", async (req, res) => {
+  connection.getConnection(function (err, conn) {
+    conn.query(
+      "SELECT * FROM markers",
+      async (err, results, field) => {
+        if (err) {
+          console.log(err);
+          res.json({ success: false, error: err});
+          return;
+        }
+
+        res.status(201).json({ success: true, markers: results });
+      }
+    );
+  });
+});
+
+// Add markers
+router.post("/api/markers", async (req, res) => {
+    const { name, desc, lat, long } = req.body;
+  
+    connection.getConnection(function (err, conn) {
+      conn.query(
+        "INSERT INTO markers (name, description, latitude, longitude) VALUES (?, ?, ?, ?)",
+        [name, desc, lat, long],
+        async (err, results, field) => {
+          if (err) {
+            console.log(err);
+            res.json({ success: false, error: err});
+            return;
+          }
+  
+          res.status(201).json({ success: true });
+        }
+      );
+    });
+  });
 
 module.exports = router;
