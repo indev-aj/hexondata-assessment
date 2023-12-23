@@ -1,4 +1,36 @@
-function Modal({ setModal }) {
+import { useState } from "react";
+
+function Modal({ setModal, getData }) {
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
+  const [lat, setLat] = useState("");
+  const [long, setLong] = useState("");
+
+  const addMarker = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:5001/api/markers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, desc, lat, long }),
+      });
+
+      const data = await response.json();
+      if (data["success"]) {
+        // close modal
+        getData();
+        setModal(false);
+      } else {
+        console.log("something happened");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
+
   return (
     <>
       <div className="center modal">
@@ -9,13 +41,14 @@ function Modal({ setModal }) {
               X
             </div>
           </div>
-          <form action="/marker" method="get">
+          <form action="/markers" method="post">
             <div className="form-group">
               <input
                 type="text"
                 id="name"
                 name="name"
                 placeholder="Name of the place"
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -24,6 +57,7 @@ function Modal({ setModal }) {
                 id="description"
                 name="description"
                 placeholder="Description of the place"
+                onChange={(e) => setDesc(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -32,6 +66,7 @@ function Modal({ setModal }) {
                 id="latitude"
                 name="latitude"
                 placeholder="Latitude"
+                onChange={(e) => setLat(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -40,12 +75,11 @@ function Modal({ setModal }) {
                 id="longitude"
                 name="longitude"
                 placeholder="Longitude"
+                onChange={(e) => setLong(e.target.value)}
               />
             </div>
             <div className="form-group">
-              <button type="submit" onClick={() => setModal(false)}>
-                Add to map
-              </button>
+              <button onClick={addMarker}>Add to map</button>
             </div>
           </form>
         </div>

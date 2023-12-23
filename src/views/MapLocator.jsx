@@ -20,25 +20,25 @@ function MapLocator() {
   const zoom = 15;
   const scrollWheelZoom = true;
 
+  const getData = async () => {
+    try {
+      const respose = await fetch("http://localhost:5001/api/get/markers");
+
+      if (!respose.ok) {
+        console.log("error occured, error ${response.status}");
+      }
+
+      let data = await respose.json();
+      setMarkers(data.markers);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // get markers from DB
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const respose = await fetch("http://localhost:5001/api/get/markers");
-
-        if (!respose.ok) {
-          console.log("error occured, error ${response.status}");
-        }
-
-        let data = await respose.json();
-        setMarkers(data.markers);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getData();
   }, []);
 
@@ -71,12 +71,16 @@ function MapLocator() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {markers && markers.map((marker) => (
-              <Marker key={marker.id} position={[marker.latitude, marker.longitude]} />
-            ))}
+            {markers &&
+              markers.map((marker) => (
+                <Marker
+                  key={marker.id}
+                  position={[marker.latitude, marker.longitude]}
+                />
+              ))}
           </MapContainer>
 
-          {modal && <Modal setModal={setModal} />}
+          {modal && <Modal setModal={setModal} getData={getData} />}
         </div>
       </div>
     </>
