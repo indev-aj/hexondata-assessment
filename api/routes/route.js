@@ -8,7 +8,7 @@ const { connection } = require("../app");
 router.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
-  connection.getConnection( function (err, conn) {
+  connection.getConnection(function (err, conn) {
     conn.query(
       "SELECT password FROM user WHERE username=?",
       [username],
@@ -27,11 +27,11 @@ router.post("/api/login", async (req, res) => {
         const hashedPassword = results[0]["password"];
         const isValid = await bcrypt.compare(password, hashedPassword);
         if (isValid) {
-            console.log("got in");
+          console.log("got in");
           res.status(201).json({ success: true });
         } else {
-            console.log("password mismatch");
-            res.status(201).json({ success: false });
+          console.log("password mismatch");
+          res.status(201).json({ success: false });
         }
       }
     );
@@ -44,15 +44,46 @@ router.post("/api/register", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   connection.getConnection(function (err, conn) {
+    if (err) {
+      console.error("Error acquiring connection:", err);
+      return res
+        .status(500)
+        .json({ success: false, error: "Internal Server Error" });
+    }
+
     conn.query(
-      "INSERT INTO user (username, password) VALUES (?, ?)",
-      [username, hashedPassword],
-      function (err, rows) {
+      "SELECT COUNT(*) AS count FROM user WHERE username = ?",
+      [username],
+      function (err, result) {
         if (err) {
-          console.log(err);
+          console.error("Error checking username existence:", err);
+          conn.release(); // Release the connection in case of an error
+          return res
+            .status(500)
+            .json({ success: false, error: "Internal Server Error" });
         }
 
-        res.status(201).json({ success: true });
+        const usernameExists = result[0].count > 0;
+
+        if (usernameExists) {
+          console.log("Username already exists");
+          conn.release(); // Release the connection before responding
+          return res
+            .status(409)
+            .json({ success: false, error: "Username already exists" });
+        }
+
+        conn.query(
+          "INSERT INTO user (username, password) VALUES (?, ?)",
+          [username, hashedPassword],
+          function (err, rows) {
+            if (err) {
+              console.log(err);
+            }
+
+            res.status(201).json({ success: true });
+          }
+        );
       }
     );
   });
