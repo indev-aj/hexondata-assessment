@@ -3,8 +3,13 @@ function Modal({ setModal }) {
     <>
       <div className="center modal">
         <div className="card card-modal">
-          <h2 className="modal-title">Add new location</h2>
-          <hr />
+          <div className="modal-header">
+            <h2 className="modal-title">Add new location</h2>
+            <div 
+            style={{cursor: "pointer"}}
+            onClick={() => setModal(false)}
+            >X</div>
+          </div>
           <div className="form-group">
             <input
               type="text"
@@ -38,7 +43,9 @@ function Modal({ setModal }) {
             />
           </div>
           <div className="form-group">
-            <button type="submit" onClick={() => setModal(false)}>Add to map</button>
+            <button type="submit" onClick={() => setModal(false)}>
+              Add to map
+            </button>
           </div>
         </div>
       </div>
