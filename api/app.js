@@ -3,56 +3,37 @@ const express = require("express");
 const mysql = require("mysql2");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const bodyParser = require('body-parser');
-const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
 
+const app = express();
 
 dotenv.config({ path: "./.env" });
 
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: process.env.DATABASE_HOST,
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE,
 });
 
-connection.connect((error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Database connected!");
-  }
-});
+// connection.connect((error) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log("Database connected!");
+//   }
+// });
 
-const app = express();
+module.exports = {
+  app,
+  connection,
+};
 
+const routes = require("./routes/route");
 app.use(cors());
 app.use(bodyParser.json());
 
-
-// Login route
-app.post("/api/login", async (req, res) => {
-  console.log("Heloo from backend");
-  try {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    res.json({ username: username, password: hashedPassword });
-    // const result = await connection.query(
-    //   "INSERT INTO users (username, password) VALUES (?, ?)",
-    //   [username, hashedPassword]
-    // );
-    // res
-    //   .status(201)
-    //   .json({
-    //     message: "User registered successfully",
-    //     userId: result.insertId,
-    //   });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+app.use("/", routes);
 
 app.listen(5001, () => {
   console.log("Listening on port 5001");
