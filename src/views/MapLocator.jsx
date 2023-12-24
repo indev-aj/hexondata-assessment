@@ -4,15 +4,17 @@ import Modal from "../components/Modal";
 
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 function MapLocator() {
   const [modal, setModal] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Updated isLoggedIn state
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleModal = () => {
     setModal(!modal);
@@ -23,59 +25,100 @@ function MapLocator() {
   const zoom = 15;
   const scrollWheelZoom = true;
 
-  const getUser = async () => {
+  const handleLogout = async () => {
     try {
-      const respose = await fetch("http://localhost:5001/api/get/user", {
-        method: "GET",
+      // Make a request to your server to handle the logout logic
+      await fetch("http://localhost:5001/api/logout", {
+        method: "POST",
+        credentials: "include",
       });
 
-      if (!respose.ok) {
-        console.log("error occured, error ${response.status}");
-      }
+      // Delete the session cookie on the client side
+      document.cookie =
+        "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-      let data = await respose.json();
-      setUser(data.user);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+      // Update the isLoggedIn state
+      setIsLoggedIn(false);
 
-  const getData = async () => {
-    try {
-      const respose = await fetch("http://localhost:5001/api/get/markers");
-
-      if (!respose.ok) {
-        console.log("error occured, error ${response.status}");
-      }
-
-      let data = await respose.json();
-      setMarkers(data.markers);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+      // Redirect to the login page
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
     }
   };
 
   // get markers from DB
   useEffect(() => {
-    getData();
-    // getUser();
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/get/markers", {
+          method: "GET",
+        });
+
+        let data = await response.json();
+        setMarkers(data.markers);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchLoginData = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/login", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        let data = await response.json();
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchLoginData();
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    // Check if the user is logged in and update the state
+    const checkLoggedInStatus = async () => {
+      const response = await fetch("http://localhost:5001/api/login", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.loggedIn) {
+        setUser(data.user.username);
+        setIsLoggedIn(data.loggedIn);
+      } else {
+        setIsLoggedIn(false);
+        console.log("go back");
+        navigate("/login", { replace: true });
+      } 
+    };
+
+    checkLoggedInStatus();
+
+    
+  }, [navigate]); // Run only once when the component mounts
+
 
   return (
     <>
       <header>
         <h1>Map Locator</h1>
-        <NavLink to={"/login"} style={{ color: "white" }}>
-          Logout
-        </NavLink>
+        <button onClick={handleLogout}>Logout</button>
       </header>
 
       <div className="map-wrapper">
         <div className="card card-map">
           <div className="welcome">
-            <div className="welcome-text">Welcome, {location.state.user}</div>
+            <div className="welcome-text">Welcome, {user}</div>
             <button className="button" onClick={toggleModal}>
               Add New
             </button>

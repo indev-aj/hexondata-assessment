@@ -3,7 +3,10 @@ const express = require("express");
 const mysql = require("mysql2");
 const dotenv = require("dotenv");
 const cors = require("cors");
+
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 const app = express();
 
@@ -21,9 +24,27 @@ module.exports = {
   connection,
 };
 
+app.use(session({
+  key: "userId",
+  secret: "secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 60 * 60 * 24,
+  }
+}));
+
 const routes = require("./routes/route");
-app.use(cors());
+
+app.use(cors({
+  origin: ["http://localhost:5173"],
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
+
+app.use(cookieParser());
 app.use(bodyParser.json());
+
 
 app.use("/", routes);
 

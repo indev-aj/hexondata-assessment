@@ -1,8 +1,17 @@
 // routes/other.js
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcrypt");
 const { connection } = require("../app");
+
+const router = express.Router();
+
+router.get("/api/login", (req, res) => {
+  if (req.session.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
+});
 
 // Login route
 router.post("/api/login", async (req, res) => {
@@ -10,7 +19,7 @@ router.post("/api/login", async (req, res) => {
 
   connection.getConnection(function (err, conn) {
     conn.query(
-      "SELECT password FROM user WHERE username=?",
+      "SELECT * FROM user WHERE username=?",
       [username],
       async (err, results, field) => {
         conn.release();
@@ -28,12 +37,15 @@ router.post("/api/login", async (req, res) => {
 
         const hashedPassword = results[0]["password"];
         const isValid = await bcrypt.compare(password, hashedPassword);
+
+        // If credential is valid then navigate to maplocator
         if (isValid) {
-          console.log("got in");
+          req.session.user = results[0];
+          console.log(req.session.user);
+
           res.status(201).json({ success: true });
         } else {
-          console.log("password mismatch");
-          res.status(201).json({ success: false });
+          res.status(401).json({ success: false, reason: "Wrong password" });
         }
       }
     );
@@ -134,5 +146,18 @@ router.post("/api/markers", async (req, res) => {
   });
 });
 
+router.post("/api/logout", (req, res) => {
+  // Destroy the session on the server
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session:", err);
+      return res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+
+    // Respond with a success message
+    res.clearCookie("userId"); // Clear the session cookie on the client side
+    res.status(200).json({ success: true });
+  });
+});
 
 module.exports = router;

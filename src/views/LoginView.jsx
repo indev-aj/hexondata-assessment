@@ -17,7 +17,9 @@ function LoginView() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Methods": ["GET", "POST"],
         },
+        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
 
