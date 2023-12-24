@@ -47,22 +47,24 @@ function MapLocator() {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:5001/api/get/markers", {
+        method: "GET",
+      });
+
+      let data = await response.json();
+      setMarkers(data.markers);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // get markers from DB
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5001/api/get/markers", {
-          method: "GET",
-        });
-
-        let data = await response.json();
-        setMarkers(data.markers);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
 
     const fetchLoginData = async () => {
       try {
@@ -99,14 +101,11 @@ function MapLocator() {
         setIsLoggedIn(false);
         console.log("go back");
         navigate("/login", { replace: true });
-      } 
+      }
     };
 
     checkLoggedInStatus();
-
-    
   }, [navigate]); // Run only once when the component mounts
-
 
   return (
     <>
@@ -144,7 +143,7 @@ function MapLocator() {
               ))}
           </MapContainer>
 
-          {modal && <Modal setModal={setModal} getData={getData} />}
+          {modal && <Modal setModal={setModal} getData={fetchData} />}
         </div>
       </div>
     </>
