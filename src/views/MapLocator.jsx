@@ -4,12 +4,15 @@ import Modal from "../components/Modal";
 
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 function MapLocator() {
   const [modal, setModal] = useState(false);
   const [markers, setMarkers] = useState([]);
+  const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const location = useLocation();
 
   const toggleModal = () => {
     setModal(!modal);
@@ -19,6 +22,23 @@ function MapLocator() {
   const centerPosition = [3.1498119894855927, 101.69660499707578];
   const zoom = 15;
   const scrollWheelZoom = true;
+
+  const getUser = async () => {
+    try {
+      const respose = await fetch("http://localhost:5001/api/get/user", {
+        method: "GET",
+      });
+
+      if (!respose.ok) {
+        console.log("error occured, error ${response.status}");
+      }
+
+      let data = await respose.json();
+      setUser(data.user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getData = async () => {
     try {
@@ -40,6 +60,7 @@ function MapLocator() {
   // get markers from DB
   useEffect(() => {
     getData();
+    // getUser();
   }, []);
 
   return (
@@ -54,7 +75,7 @@ function MapLocator() {
       <div className="map-wrapper">
         <div className="card card-map">
           <div className="welcome">
-            <div className="welcome-text">Welcome, Amrin</div>
+            <div className="welcome-text">Welcome, {location.state.user}</div>
             <button className="button" onClick={toggleModal}>
               Add New
             </button>

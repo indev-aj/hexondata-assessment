@@ -1,37 +1,36 @@
 import "../App.css";
-import {useState} from "react";
+import { useState } from "react";
 
 import { NavLink, useNavigate } from "react-router-dom";
 
 function LoginView() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5001/api/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5001/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
-      if (data['success']) {
-        navigate('/');
+      if (data["success"]) {
+        navigate("/", { state: { user: username } });
       } else {
-        console.log('no user found');
+        console.log("no user found");
       }
     } catch (error) {
-      console.error('Error during registration:', error);
+      console.error("Error during registration:", error);
     }
-  }
+  };
 
   return (
     <>
@@ -58,9 +57,7 @@ function LoginView() {
               />
             </div>
             <div className="form-group">
-              <button onClick={handleLogin}>
-                Login
-              </button>
+              <button onClick={handleLogin}>Login</button>
             </div>
             <div className="alternate-action">
               <NavLink to={"/signup"}>No account? Sign up here</NavLink>
