@@ -13,6 +13,8 @@ router.post("/api/login", async (req, res) => {
       "SELECT password FROM user WHERE username=?",
       [username],
       async (err, results, field) => {
+        conn.release();
+
         if (err) {
           console.log(err);
           res.json({ success: false });
@@ -46,6 +48,7 @@ router.post("/api/register", async (req, res) => {
   connection.getConnection(function (err, conn) {
     if (err) {
       console.error("Error acquiring connection:", err);
+      conn.release();
       return res
         .status(500)
         .json({ success: false, error: "Internal Server Error" });
@@ -77,6 +80,8 @@ router.post("/api/register", async (req, res) => {
           "INSERT INTO user (username, password) VALUES (?, ?)",
           [username, hashedPassword],
           function (err, rows) {
+            conn.release();
+
             if (err) {
               console.log(err);
             }
@@ -95,6 +100,8 @@ router.get("/api/get/markers", async (req, res) => {
     conn.query(
       "SELECT * FROM markers",
       async (err, results, field) => {
+        conn.release();
+
         if (err) {
           console.log(err);
           res.json({ success: false, error: err});
@@ -116,6 +123,8 @@ router.post("/api/markers", async (req, res) => {
         "INSERT INTO markers (name, description, latitude, longitude) VALUES (?, ?, ?, ?)",
         [name, desc, lat, long],
         async (err, results, field) => {
+        conn.release();
+
           if (err) {
             console.log(err);
             res.json({ success: false, error: err});
