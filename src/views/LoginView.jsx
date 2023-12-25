@@ -1,5 +1,5 @@
 import "../App.css";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -33,6 +33,26 @@ function LoginView() {
       console.error("Error during registration:", error);
     }
   };
+
+  useEffect(() => {
+    // Check if the user is logged in and update the state
+    const checkLoggedInStatus = async () => {
+      const response = await fetch("http://localhost:5001/api/login", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.loggedIn) {
+        navigate("/", { replace: true });
+      } else {
+      }
+    };
+
+    checkLoggedInStatus();
+  }, [navigate]); // Run only once when the component mounts
 
   return (
     <>
