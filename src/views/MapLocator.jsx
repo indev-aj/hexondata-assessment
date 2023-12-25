@@ -4,7 +4,7 @@ import Modal from "../components/Modal";
 
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { useEffect, useState } from "react";
-import { NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function MapLocator() {
   const [modal, setModal] = useState(false);
